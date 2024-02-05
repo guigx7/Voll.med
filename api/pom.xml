@@ -12,7 +12,7 @@
 	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>api</name>
-	<description>API REST da aplicaçao Voll.med</description>
+	<description>API REST da aplicação Voll.med</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
