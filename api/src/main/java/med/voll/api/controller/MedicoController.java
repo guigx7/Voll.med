@@ -1,8 +1,10 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.medico.*;
-import org.apache.coyote.Response;
+import med.voll.api.domain.medico.DadosListagemMedico;
+import med.voll.api.domain.medico.Medico;
+import med.voll.api.domain.medico.MedicoRepository;
+import med.voll.api.domain.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/medicos")
+@RequestMapping("medicos")
 public class MedicoController {
 
     @Autowired
@@ -33,16 +33,14 @@ public class MedicoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 15, page = 0, sort = {"id"}) Pageable paginacao) {
+    public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         var page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
-
         return ResponseEntity.ok(page);
-
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados){
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
         var medico = repository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados);
 
@@ -51,7 +49,7 @@ public class MedicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id){
+    public ResponseEntity excluir(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
         medico.excluir();
 
@@ -59,13 +57,10 @@ public class MedicoController {
     }
 
     @GetMapping("/{id}")
-    @Transactional
-    public ResponseEntity detalhar(@PathVariable Long id){
+    public ResponseEntity detalhar(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
-
         return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
     }
 
+
 }
-
-
